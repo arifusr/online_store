@@ -66,15 +66,15 @@ func (svc *Service) Find(c echo.Context) error {
 			var allmiddleware echo.HandlerFunc
 			for i := range svc.FindMiddlewares {
 				if allmiddleware == nil {
-					allmiddleware = svc.FindMiddlewares[len(svc.FindMiddlewares)-i](svc.FindFunc)
+					allmiddleware = svc.FindMiddlewares[len(svc.FindMiddlewares)-i-1](svc.FindFunc)
 				} else {
-					allmiddleware = svc.FindMiddlewares[len(svc.FindMiddlewares)-i](allmiddleware)
+					allmiddleware = svc.FindMiddlewares[len(svc.FindMiddlewares)-i-1](allmiddleware)
 				}
 			}
+			allmiddleware(c)
 
 		} else {
 			svc.FindFunc(c)
-
 		}
 	} else {
 		return errors.New("no method find")
@@ -91,16 +91,16 @@ func (svc *Service) Get(c echo.Context) error {
 			var allmiddleware echo.HandlerFunc
 			for i := range svc.GetMiddlewares {
 				if allmiddleware == nil {
-					allmiddleware = svc.GetMiddlewares[len(svc.GetMiddlewares)-i](svc.FindFunc)
+					allmiddleware = svc.GetMiddlewares[len(svc.GetMiddlewares)-i-1](svc.FindFunc)
 				} else {
-					allmiddleware = svc.GetMiddlewares[len(svc.GetMiddlewares)-i](allmiddleware)
+					allmiddleware = svc.GetMiddlewares[len(svc.GetMiddlewares)-i-1](allmiddleware)
 				}
 			}
+			allmiddleware(c)
 
 		} else {
-			svc.FindFunc(c)
+			svc.GetFunc(c)
 		}
-		svc.GetFunc(c)
 	} else {
 		return errors.New("no method find")
 	}
@@ -116,16 +116,15 @@ func (svc *Service) Create(c echo.Context) error {
 			var allmiddleware echo.HandlerFunc
 			for i := range svc.CreateMiddlewares {
 				if allmiddleware == nil {
-					allmiddleware = svc.CreateMiddlewares[len(svc.CreateMiddlewares)-i](svc.FindFunc)
+					allmiddleware = svc.CreateMiddlewares[len(svc.CreateMiddlewares)-i-1](svc.FindFunc)
 				} else {
-					allmiddleware = svc.CreateMiddlewares[len(svc.CreateMiddlewares)-i](allmiddleware)
+					allmiddleware = svc.CreateMiddlewares[len(svc.CreateMiddlewares)-i-1](allmiddleware)
 				}
 			}
-
+			allmiddleware(c)
 		} else {
-			svc.FindFunc(c)
+			svc.CreateFunc(c)
 		}
-		svc.CreateFunc(c)
 	} else {
 		return errors.New("no method find")
 	}
