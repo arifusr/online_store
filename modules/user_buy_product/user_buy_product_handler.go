@@ -23,9 +23,16 @@ func RaceCondition(Db *gorm.DB, requestBody UserBuyProductCreateRequest) error {
 	// naikkan versi product dan user
 
 	newProductStock := Product.Stock - requestBody.Qty
+	if newProductStock < 1 {
+		return errors.New("stok habis")
+	}
 	NewProductVersion := Product.Version + 1
 
 	newUserSaldo := User.Saldo - (Product.Price * requestBody.Qty)
+	if newUserSaldo < 0 {
+		return errors.New("saldo habis")
+
+	}
 	newUserVersion := User.Version + 1
 
 	// update menggunakan transaction
@@ -66,8 +73,12 @@ func UserBuyProductCreate(c echo.Context) error {
 	requestBody := UserBuyProductCreateRequest{}
 	Validator.BindAndValidate(&requestBody, c)
 
-	if err := RaceCondition(Db, requestBody); err != nil {
+	if err := RaceCondition(Db, requestBody); err != nil && err.Error() != "stok habis" && err.Error() != "saldo habis" {
 		RaceCondition(Db, requestBody)
+	} else {
+		c.JSON(http.StatusPreconditionFailed, struct {
+			Message string `json:"message"`
+		}{Message: err.Error()})
 	}
 
 	c.NoContent(http.StatusOK)
