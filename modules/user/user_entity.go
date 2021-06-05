@@ -9,6 +9,7 @@ type UserModel struct {
 	Phone    string
 	Saldo    int `gorm:"type:int;not null;default:0"`
 	Password string
+	Username string
 }
 
 func (M *UserModel) TableName() string {
