@@ -6,9 +6,11 @@ import (
 	"time"
 
 	"github.com/arifusr/online_store/app"
+	"github.com/arifusr/online_store/modules/user"
 	"github.com/arifusr/online_store/modules/validator"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 )
 
 type MyClaims struct {
@@ -20,7 +22,19 @@ func GenerateToken(c echo.Context) error {
 	userLoginRequest := UserLoginRequest{}
 	Validator := c.Get("Validator").(*validator.Validator)
 	App := c.Get("App").(*app.App)
+	Db := c.Get("Db").(*gorm.DB)
 	if err := Validator.BindAndValidate(&userLoginRequest, c); err != nil {
+		return err
+	}
+
+	// check username n password
+	User := user.UserModel{
+		Username: userLoginRequest.Username,
+		Password: userLoginRequest.Password,
+	}
+	var Result user.UserModel
+	if err := Db.Model(User).Where(&User).First(&Result).Error; err != nil {
+		c.NoContent(http.StatusNotFound)
 		return err
 	}
 
@@ -29,7 +43,7 @@ func GenerateToken(c echo.Context) error {
 			Issuer:    App.Config.Name,
 			ExpiresAt: time.Now().Add(time.Duration(1) * time.Hour).Unix(),
 		},
-		UserId: 1,
+		UserId: Result.ID,
 	}
 	token := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,

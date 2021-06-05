@@ -11,6 +11,7 @@ type UserLogin struct {
 
 func (userLogin *UserLogin) Install(a *app.App) error {
 	svc := app.NewService(Name, nil, nil, GenerateToken)
+	svc.AddContextValue("Db", a.Db)
 	if err := a.RegisterService(svc); err != nil {
 		return err
 	}
