@@ -35,6 +35,7 @@ func (v *Validator) Install(a *app.App) error {
 	a.Echo.Validator = v
 	for _, svc := range a.Services {
 		svc.AddContextValue("Validator", v)
+		svc.AddContextValue("App", a)
 	}
 	return nil
 }
