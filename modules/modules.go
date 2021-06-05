@@ -33,12 +33,6 @@ func (module *Modules) Install(a *app.App) error {
 	// 	return err
 	// }
 
-	// install validator
-	Validator := validator.Validator{}
-	if err := a.Use(&Validator); err != nil {
-		return err
-	}
-
 	//install product
 	Product := product.Product{}
 	if err := a.Use(&Product); err != nil {
@@ -56,5 +50,13 @@ func (module *Modules) Install(a *app.App) error {
 	if err := a.Use(&UserLogin); err != nil {
 		return err
 	}
+
+	// install validator
+	Validator := validator.Validator{}
+	if err := a.Use(&Validator); err != nil {
+		return err
+	}
+
 	return nil
+
 }
