@@ -11,6 +11,7 @@ type Product struct {
 
 func (product *Product) Install(a *app.App) error {
 	svc := app.NewService(Name, ProductFindAll, nil, ProductCreate)
+	svc.AddContextValue("Db", a.Db)
 	if err := a.RegisterService(svc); err != nil {
 		return err
 	}
