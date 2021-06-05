@@ -91,7 +91,7 @@ func (svc *Service) Get(c echo.Context) error {
 			var allmiddleware echo.HandlerFunc
 			for i := range svc.GetMiddlewares {
 				if allmiddleware == nil {
-					allmiddleware = svc.GetMiddlewares[len(svc.GetMiddlewares)-i-1](svc.FindFunc)
+					allmiddleware = svc.GetMiddlewares[len(svc.GetMiddlewares)-i-1](svc.GetFunc)
 				} else {
 					allmiddleware = svc.GetMiddlewares[len(svc.GetMiddlewares)-i-1](allmiddleware)
 				}
@@ -116,7 +116,7 @@ func (svc *Service) Create(c echo.Context) error {
 			var allmiddleware echo.HandlerFunc
 			for i := range svc.CreateMiddlewares {
 				if allmiddleware == nil {
-					allmiddleware = svc.CreateMiddlewares[len(svc.CreateMiddlewares)-i-1](svc.FindFunc)
+					allmiddleware = svc.CreateMiddlewares[len(svc.CreateMiddlewares)-i-1](svc.CreateFunc)
 				} else {
 					allmiddleware = svc.CreateMiddlewares[len(svc.CreateMiddlewares)-i-1](allmiddleware)
 				}
