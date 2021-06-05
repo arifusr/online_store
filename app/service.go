@@ -16,12 +16,15 @@ type ServiceInterface interface {
 }
 
 type Service struct {
-	Name         string
-	FindFunc     echo.HandlerFunc
-	GetFunc      echo.HandlerFunc
-	CreateFunc   echo.HandlerFunc
-	App          *App
-	ContextValue map[string]interface{}
+	Name              string
+	FindFunc          echo.HandlerFunc
+	GetFunc           echo.HandlerFunc
+	CreateFunc        echo.HandlerFunc
+	App               *App
+	ContextValue      map[string]interface{}
+	FindMiddlewares   []echo.MiddlewareFunc
+	GetMiddlewares    []echo.MiddlewareFunc
+	CreateMiddlewares []echo.MiddlewareFunc
 }
 
 func NewService(name string, find echo.HandlerFunc, get echo.HandlerFunc, create echo.HandlerFunc) *Service {
@@ -39,12 +42,40 @@ func (svc *Service) AddContextValue(key string, value interface{}) error {
 	return nil
 }
 
+func (svc *Service) AddMiddlewareFind(middleware echo.MiddlewareFunc) error {
+	svc.FindMiddlewares = append(svc.FindMiddlewares, middleware)
+	return nil
+}
+
+func (svc *Service) AddMiddlewareGet(middleware echo.MiddlewareFunc) error {
+	svc.GetMiddlewares = append(svc.GetMiddlewares, middleware)
+	return nil
+}
+
+func (svc *Service) AddMiddlewareCreate(middleware echo.MiddlewareFunc) error {
+	svc.CreateMiddlewares = append(svc.CreateMiddlewares, middleware)
+	return nil
+}
+
 func (svc *Service) Find(c echo.Context) error {
 	if svc.FindFunc != nil {
 		for key, value := range svc.ContextValue {
 			c.Set(key, value)
 		}
-		svc.FindFunc(c)
+		if len(svc.FindMiddlewares) > 0 {
+			var allmiddleware echo.HandlerFunc
+			for i := range svc.FindMiddlewares {
+				if allmiddleware == nil {
+					allmiddleware = svc.FindMiddlewares[len(svc.FindMiddlewares)-i](svc.FindFunc)
+				} else {
+					allmiddleware = svc.FindMiddlewares[len(svc.FindMiddlewares)-i](allmiddleware)
+				}
+			}
+
+		} else {
+			svc.FindFunc(c)
+
+		}
 	} else {
 		return errors.New("no method find")
 	}
@@ -55,6 +86,19 @@ func (svc *Service) Get(c echo.Context) error {
 	if svc.GetFunc != nil {
 		for key, value := range svc.ContextValue {
 			c.Set(key, value)
+		}
+		if len(svc.GetMiddlewares) > 0 {
+			var allmiddleware echo.HandlerFunc
+			for i := range svc.GetMiddlewares {
+				if allmiddleware == nil {
+					allmiddleware = svc.GetMiddlewares[len(svc.GetMiddlewares)-i](svc.FindFunc)
+				} else {
+					allmiddleware = svc.GetMiddlewares[len(svc.GetMiddlewares)-i](allmiddleware)
+				}
+			}
+
+		} else {
+			svc.FindFunc(c)
 		}
 		svc.GetFunc(c)
 	} else {
@@ -67,6 +111,19 @@ func (svc *Service) Create(c echo.Context) error {
 	if svc.CreateFunc != nil {
 		for key, value := range svc.ContextValue {
 			c.Set(key, value)
+		}
+		if len(svc.CreateMiddlewares) > 0 {
+			var allmiddleware echo.HandlerFunc
+			for i := range svc.CreateMiddlewares {
+				if allmiddleware == nil {
+					allmiddleware = svc.CreateMiddlewares[len(svc.CreateMiddlewares)-i](svc.FindFunc)
+				} else {
+					allmiddleware = svc.CreateMiddlewares[len(svc.CreateMiddlewares)-i](allmiddleware)
+				}
+			}
+
+		} else {
+			svc.FindFunc(c)
 		}
 		svc.CreateFunc(c)
 	} else {
