@@ -1,4 +1,4 @@
-package config
+package app
 
 type Config struct {
 	Port string `env:"PORT,required"`

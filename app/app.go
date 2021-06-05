@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 
-	"github.com/arifusr/online_store/modules/config"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -14,14 +13,14 @@ type Installable interface {
 
 type App struct {
 	Echo     *echo.Echo
-	Config   config.Config
+	Config   Config
 	Services map[string]*Service
 	Models   map[string]*Model
 	Db       *gorm.DB
 }
 
 func NewApp(Echo *echo.Echo) *App {
-	return &App{Echo: Echo, Config: config.Config{}, Services: make(map[string]*Service)}
+	return &App{Echo: Echo, Config: Config{}, Services: make(map[string]*Service)}
 }
 
 func (app *App) RegisterService(svc *Service) error {
