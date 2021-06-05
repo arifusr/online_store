@@ -6,6 +6,8 @@ import (
 	"github.com/arifusr/online_store/modules/env"
 	"github.com/arifusr/online_store/modules/product"
 	"github.com/arifusr/online_store/modules/user"
+	"github.com/arifusr/online_store/modules/user_login"
+	"github.com/arifusr/online_store/modules/validator"
 )
 
 type Modules struct {
@@ -31,6 +33,12 @@ func (module *Modules) Install(a *app.App) error {
 	// 	return err
 	// }
 
+	// install validator
+	Validator := validator.Validator{}
+	if err := a.Use(&Validator); err != nil {
+		return err
+	}
+
 	//install product
 	Product := product.Product{}
 	if err := a.Use(&Product); err != nil {
@@ -40,6 +48,12 @@ func (module *Modules) Install(a *app.App) error {
 	//install user
 	User := user.User{}
 	if err := a.Use(&User); err != nil {
+		return err
+	}
+
+	//install user_login
+	UserLogin := user_login.UserLogin{}
+	if err := a.Use(&UserLogin); err != nil {
 		return err
 	}
 	return nil
