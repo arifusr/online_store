@@ -10,6 +10,7 @@ type UserModel struct {
 	Saldo    int `gorm:"type:int;not null;default:0"`
 	Password string
 	Username string
+	Version  int
 }
 
 func (M *UserModel) TableName() string {

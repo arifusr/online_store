@@ -7,10 +7,11 @@ type ProductCreateRequest struct {
 const ProductTableName string = "product"
 
 type ProductModel struct {
-	ID    int    `gorm:"type:int;primaryKey;autoIncrement"`
-	Name  string `gorm:"type:varchar(255);not null"`
-	Stock int    `gorm:"type:int;not null;default:0"`
-	Price int    `gorm:"type:int;not null;default:0"`
+	ID      int    `gorm:"type:int;primaryKey;autoIncrement"`
+	Name    string `gorm:"type:varchar(255);not null"`
+	Stock   int    `gorm:"type:int;not null;default:0"`
+	Price   int    `gorm:"type:int;not null;default:0"`
+	Version int
 }
 
 func (M *ProductModel) TableName() string {
