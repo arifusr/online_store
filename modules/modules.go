@@ -6,6 +6,7 @@ import (
 	"github.com/arifusr/online_store/modules/env"
 	"github.com/arifusr/online_store/modules/product"
 	"github.com/arifusr/online_store/modules/user"
+	"github.com/arifusr/online_store/modules/user_buy_product"
 	"github.com/arifusr/online_store/modules/user_login"
 	"github.com/arifusr/online_store/modules/validator"
 )
@@ -48,6 +49,12 @@ func (module *Modules) Install(a *app.App) error {
 	//install user_login
 	UserLogin := user_login.UserLogin{}
 	if err := a.Use(&UserLogin); err != nil {
+		return err
+	}
+
+	//install user_buy_product
+	UserBuyProduct := user_buy_product.UserBuyProduct{}
+	if err := a.Use(&UserBuyProduct); err != nil {
 		return err
 	}
 
