@@ -10,7 +10,7 @@ type Invoice struct {
 }
 
 func (inv *Invoice) Install(a *app.App) error {
-	svc := app.NewService(Name, a, nil, nil, nil)
+	svc := app.NewService(Name, nil, nil, nil)
 	if err := a.RegisterService(svc); err != nil {
 		return err
 	}

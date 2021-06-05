@@ -24,13 +24,12 @@ type Service struct {
 	ContextValue map[string]interface{}
 }
 
-func NewService(name string, a *App, find echo.HandlerFunc, get echo.HandlerFunc, create echo.HandlerFunc) *Service {
+func NewService(name string, find echo.HandlerFunc, get echo.HandlerFunc, create echo.HandlerFunc) *Service {
 	return &Service{
 		Name:         name,
 		FindFunc:     find,
 		GetFunc:      get,
 		CreateFunc:   create,
-		App:          a,
 		ContextValue: make(map[string]interface{}),
 	}
 }

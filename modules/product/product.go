@@ -10,7 +10,7 @@ type Product struct {
 }
 
 func (product *Product) Install(a *app.App) error {
-	svc := app.NewService(Name, a, ProductFindAll, nil, ProductCreate)
+	svc := app.NewService(Name, ProductFindAll, nil, ProductCreate)
 	if err := a.RegisterService(svc); err != nil {
 		return err
 	}

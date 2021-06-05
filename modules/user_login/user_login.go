@@ -10,7 +10,7 @@ type UserLogin struct {
 }
 
 func (userLogin *UserLogin) Install(a *app.App) error {
-	svc := app.NewService(Name, a, nil, nil, GenerateToken)
+	svc := app.NewService(Name, nil, nil, GenerateToken)
 	if err := a.RegisterService(svc); err != nil {
 		return err
 	}
