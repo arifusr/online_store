@@ -1,7 +1,6 @@
 package user_login
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -49,8 +48,7 @@ func GenerateToken(c echo.Context) error {
 		jwt.SigningMethodHS256,
 		claims,
 	)
-	signedToken, err := token.SignedString([]byte(App.Config.ConfigJWT.Secret))
-	fmt.Print(err)
+	signedToken, _ := token.SignedString([]byte(App.Config.ConfigJWT.Secret))
 	c.JSON(http.StatusOK, signedToken)
 	return nil
 }

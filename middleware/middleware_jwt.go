@@ -30,7 +30,7 @@ func JWT(next echo.HandlerFunc) echo.HandlerFunc {
 			c.NoContent(http.StatusUnauthorized)
 			return errors.New("token not valid")
 		}
-		c.Set("UserInfo", claims)
+		c.Set("UserId", int(claims["user_id"].(float64)))
 		return next(c)
 	}
 }
