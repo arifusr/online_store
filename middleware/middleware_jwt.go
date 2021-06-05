@@ -18,11 +18,17 @@ func JWT(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		tokenString := strings.Replace(authorizationHeader, "Bearer ", "", -1)
-		jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		token, _ := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 
-			return nil, nil
+			return []byte("superrahasia"), nil
 
 		})
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok || !token.Valid {
+			c.NoContent(http.StatusUnauthorized)
+			return errors.New("token not valid")
+		}
+		c.Set("UserInfo", claims)
 		return next(c)
 	}
 }
